@@ -6,6 +6,8 @@ admins = {
     
     'steam:110000137972c5f',
     --'license:cd09795df59f34bd5d6f81add2d605343e2d48a3',
+
+    'steam:11000011ae86afd',
 }
 
 -- Set this to false if you don't want the weather to change automatically every 10 minutes.
