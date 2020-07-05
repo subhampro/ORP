@@ -18,7 +18,6 @@ git clone https://github.com/ESX-Org/skinchanger skinchanger
 
 ## Installation
 - Add this to your `server.cfg`:
-
 ```
 start skinchanger
 ```

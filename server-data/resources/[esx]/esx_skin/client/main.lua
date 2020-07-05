@@ -262,18 +262,18 @@ AddEventHandler('playerSpawned', function()
 			Citizen.Wait(100)
 		end
 
-	-- 	if firstSpawn then
-	-- 		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-	-- 			if skin == nil then
-	-- 				TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
-	-- 			else
-	-- 				TriggerEvent('skinchanger:loadSkin', skin)
-	-- 			end
-	-- 		end)
+		if firstSpawn then
+			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+				if skin == nil then
+					TriggerEvent('skinchanger:loadSkin', {sex = 0}, OpenSaveableMenu)
+				else
+					TriggerEvent('skinchanger:loadSkin', skin)
+				end
+			end)
 
-	-- 		firstSpawn = false
-	-- 	end
-	-- end)
+			firstSpawn = false
+		end
+	end)
 end)
 
 RegisterNetEvent('esx:playerLoaded')

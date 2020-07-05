@@ -119,7 +119,7 @@ function GetMaxVals()
 	local playerPed = PlayerPedId()
 
 	local data = {
-		sex				= 1,
+		sex				= 626,
 		face			= 45,
 		skin			= 45,
 		age_1			= GetNumHeadOverlayValues(3)-1,
@@ -369,14 +369,19 @@ end)
 
 RegisterNetEvent('skinchanger:loadSkin')
 AddEventHandler('skinchanger:loadSkin', function(skin, cb)
+	local playerPed = GetPlayerPed(-1)
+	local characterModel
 	if skin['sex'] ~= LastSex then
 		LoadSkin = skin
 
 		if skin['sex'] == 0 then
 			TriggerEvent('skinchanger:loadDefaultModel', true, cb)
+		elseif skin['sex'] > 1 then
+			characterModel = pedList[skin.sex - 1]
 		else
 			TriggerEvent('skinchanger:loadDefaultModel', false, cb)
 		end
+		RequestModel(characterModel)
 	else
 		ApplySkin(skin)
 
@@ -386,10 +391,29 @@ AddEventHandler('skinchanger:loadSkin', function(skin, cb)
 	end
 
 	LastSex = skin['sex']
+	
+  Citizen.CreateThread(function()
+
+    while not HasModelLoaded(characterModel) do
+      RequestModel(characterModel)
+      Citizen.Wait(0)
+    end
+
+    if IsModelInCdimage(characterModel) and IsModelValid(characterModel) then
+      SetPlayerModel(PlayerId(), characterModel)
+      SetPedDefaultComponentVariation(playerPed)
+    end
+
+    SetModelAsNoLongerNeeded(characterModel)
+    TriggerEvent('skinchanger:modelLoaded')
+
+  end)
 end)
 
 RegisterNetEvent('skinchanger:loadClothes')
 AddEventHandler('skinchanger:loadClothes', function(playerSkin, clothesSkin)
+	local playerPed = GetPlayerPed(-1)
+	local characterModel
 	if playerSkin['sex'] ~= LastSex then
 		LoadClothes = {
 			playerSkin	= playerSkin,
@@ -398,12 +422,33 @@ AddEventHandler('skinchanger:loadClothes', function(playerSkin, clothesSkin)
 
 		if playerSkin['sex'] == 0 then
 			TriggerEvent('skinchanger:loadDefaultModel', true)
+		elseif playerSkin['sex'] > 1 then
+			characterModel = pedList[playerSkin.sex - 1]
 		else
 			TriggerEvent('skinchanger:loadDefaultModel', false)
 		end
+		RequestModel(characterModel)
 	else
 		ApplySkin(playerSkin, clothesSkin)
 	end
 
 	LastSex = playerSkin['sex']
+	
+  Citizen.CreateThread(function()
+
+    while not HasModelLoaded(characterModel) do
+      RequestModel(characterModel)
+      Citizen.Wait(0)
+    end
+
+    if IsModelInCdimage(characterModel) and IsModelValid(characterModel) then
+      SetPlayerModel(PlayerId(), characterModel)
+      SetPedDefaultComponentVariation(playerPed)
+    end
+
+    SetModelAsNoLongerNeeded(characterModel)
+    TriggerEvent('skinchanger:modelLoaded')
+
+  end)
+
 end)
